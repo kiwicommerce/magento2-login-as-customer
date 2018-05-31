@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * KiwiCommerce
+ *
+ * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
+ * If you wish to customize this module for your needs.
+ * Please contact us https://kiwicommerce.co.uk/contacts.
+ *
+ * @category   KiwiCommerce
+ * @package    KiwiCommerce_Modulename
+ * @copyright  Copyright (C) 2018 Kiwi Commerce Ltd (https://kiwicommerce.co.uk/)
+ * @license    https://kiwicommerce.co.uk/magento2-extension-license/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Customer::customer" title="Customers" translate="title" sortOrder="40">
+                    <resource id="KiwiCommerce_LoginAsCustomer::kiwicommerce_login_as_customer" sortOrder="10"
+                              title="Login As customer">
+                        <resource id="KiwiCommerce_LoginAsCustomer::CustomerGrid" sortOrder="20"
+                                  title="Customer grid page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::CustomerView" sortOrder="20"
+                                  title="Customer Edit page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::OrderGrid" sortOrder="30" title="Order page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::InvoiceGrid" sortOrder="40" title="Invoice page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentGrid" sortOrder="50" title="Shipment Page
+"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60" title="Credit Memo Page
+"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="KiwiCommerce_LoginAsCustomer::config" title="Login As Customer Setting"
+                                      translate="title"/>
+                        </resource>
+                    </resource>
+                </resource>
+
+            </resource>
+        </resources>
+    </acl>
+</config>

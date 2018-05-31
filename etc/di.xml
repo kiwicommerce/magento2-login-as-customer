@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * KiwiCommerce
+ *
+ * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
+ * If you wish to customize this module for your needs.
+ * Please contact us https://kiwicommerce.co.uk/contacts.
+ *
+ * @category   KiwiCommerce
+ * @package    KiwiCommerce_Modulename
+ * @copyright  Copyright (C) 2018 Kiwi Commerce Ltd (https://kiwicommerce.co.uk/)
+ * @license    https://kiwicommerce.co.uk/magento2-extension-license/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="KiwiCommerce\LoginAsCustomer\Api\LoginAsCustomerRepositoryInterface"
+                type="KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomerRepository"/>
+    <preference for="KiwiCommerce\LoginAsCustomer\Api\Data\LoginAsCustomerInterface"
+                type="KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer"/>
+    <preference for="KiwiCommerce\LoginAsCustomer\Api\Data\LoginAsCustomerSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+    <virtualType name="KiwiCommerce\LoginAsCustomer\Model\ResourceModel\LoginAsCustomer\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">kiwicommerce_login_as_customer</argument>
+            <argument name="resourceModel" xsi:type="string">
+                KiwiCommerce\LoginAsCustomer\Model\ResourceModel\LoginAsCustomer\Collection
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="kiwicommerce_login_as_customer_grid_data_source" xsi:type="string">
+                    KiwiCommerce\LoginAsCustomer\Model\ResourceModel\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>
