@@ -18,8 +18,8 @@
 
  2. Command Line Installation
       - Backup your web directory and database.
-      - Download Admin Activity Log installation package from <a href="https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.0/kiwicommerce-login-as-customer-v100.zip">here</a>.
-      - Upload contents of the Admin Activity Log installation package to your Magento root directory.
+      - Download Login as Customer installation package from <a href="https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.0/kiwicommerce-login-as-customer-v100.zip">here</a>.
+      - Upload contents of the Login as Customer installation package to your Magento root directory.
       - Navigate to your Magento root folder<br />
           `cd path_to_the_magento_root_directory`<br />
       - Then run the following command<br />
@@ -32,7 +32,7 @@
           `php bin/magento setup:static-content:deploy`<br />
           `php bin/magento cache:flush`
           
-Find More details on <a href="https://kiwicommerce.co.uk/docs/login_as_customer/" target="_blank">Kiwi Commerce</a>
+Find More details on <a href="https://kiwicommerce.co.uk/extensions/magento2-login-as-customer" target="_blank">Kiwi Commerce</a>
 
 ## Where will it appear in Admin Panel
 
