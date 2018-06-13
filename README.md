@@ -1,4 +1,4 @@
-## Magento 2 - Login as Customer by Kiwi Commerce
+## Magento 2 - Login as Customer by KiwiCommerce
 
 ### Overview
 - Admin can login as customers to trace any process in which the customer is facing the issue.
@@ -18,7 +18,7 @@
 
  2. Command Line Installation
       - Backup your web directory and database.
-      - Download Login as Customer installation package from <a href="https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.0/kiwicommerce-login-as-customer-v100.zip">here</a>.
+      - Download Login as Customer installation package from <a href="https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.1/kiwicommerce-login-as-customer-v101.zip">here</a>.
       - Upload contents of the Login as Customer installation package to your Magento root directory.
       - Navigate to your Magento root folder<br />
           `cd path_to_the_magento_root_directory`<br />
@@ -32,7 +32,7 @@
           `php bin/magento setup:static-content:deploy`<br />
           `php bin/magento cache:flush`
           
-Find More details on <a href="https://kiwicommerce.co.uk/extensions/magento2-login-as-customer" target="_blank">Kiwi Commerce</a>
+Find More details on <a href="https://kiwicommerce.co.uk/extensions/magento2-login-as-customer" target="_blank">KiwiCommerce</a>
 
 ## Where will it appear in Admin Panel
 
@@ -71,4 +71,5 @@ We love answering questions or doubts simply ask us in issue section. We're look
  
   - Follow us <a href="https://twitter.com/KiwiCommerce">@KiwiCommerce</a>
   - <a href="mailto:support@kiwicommerce.co.uk">Email Us</a>
-  - Have a look at our <a href="https://kiwicommerce.co.uk/docs/login_as_customer/">documentation</a>
+  - Have a look at our <a href="https://kiwicommerce.co.uk/docs/login-as-customer/">documentation</a>
+
