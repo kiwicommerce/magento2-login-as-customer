@@ -21,7 +21,7 @@
         "admin",
         "backend",
         "customer",
-	"login",
+        "login",
         "loginascustomer"
     ],
     "autoload": {
