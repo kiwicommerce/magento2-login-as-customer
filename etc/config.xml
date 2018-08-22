@@ -16,7 +16,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <KiwiCommerce>
+        <kiwicommerce>
             <general>
                 <login_as_customer_enabled>1</login_as_customer_enabled>
             </general>
@@ -24,7 +24,7 @@
                 <customer_grid_page>1</customer_grid_page>
                 <customer_edit_page>1</customer_edit_page>
             </button_visibility>
-        </KiwiCommerce>
+        </kiwicommerce>
     </default>
 </config>
 
