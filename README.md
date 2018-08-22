@@ -15,7 +15,7 @@
 
  2. Command Line Installation
       - Backup your web directory and database
-      - Download Login as Customer installation package from [here](https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.1/kiwicommerce-login-as-customer-v101.zip)
+      - Download Login as Customer installation package from [here](https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.2/kiwicommerce-login-as-customer-v102.zip)
       - Navigate to your Magento root folder<br />
           `cd path_to_the_magento_root_directory`<br />      
       - Upload contents of the Login as Customer installation package to your Magento root directory
