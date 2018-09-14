@@ -88,7 +88,7 @@ class Login extends \Magento\Backend\App\Action
             $this->messageManager->addErrorMessage(__('This is not valid customer/ Customer not found'));
             $this->_redirect('customer/index/index');
             return;
-            }
+        }
         $user = $this->kiwiSession->getUser();
 
         /*Pass admin data*/
@@ -122,6 +122,5 @@ class Login extends \Magento\Backend\App\Action
         $this->getResponse()->setRedirect(
             $redirectUrl
         );
-
     }
 }

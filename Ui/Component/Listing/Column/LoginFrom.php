@@ -27,7 +27,7 @@ class LoginFrom extends Column
     /**
      * @var Data
      */
-    protected  $helper;
+    protected $helper;
 
     /**
      * LoginFrom constructor.

@@ -33,7 +33,6 @@ class Index extends \Magento\Framework\App\Action\Action
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer $kiwiLoginAsCustomer
-
     ) {
         $this->kiwiLoginAsCustomer = $kiwiLoginAsCustomer;
         parent::__construct($context);

@@ -82,7 +82,7 @@ class Actions extends Column
             $hidden = !$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
             foreach ($dataSource['data']['items'] as &$item) {
                 $item[$this->getData('name')] = $this->prepareHtml($item['entity_id']);
-               }
+            }
         }
         return $dataSource;
     }
@@ -96,7 +96,7 @@ class Actions extends Column
             'loginascustomer/loginascustomer/login',
             ['customer_id' => $id, 'login_from' => 1]
         );
-        $finalHtml = '<a href="'.$url.'" target="_blank">Login</a>';;
+        $finalHtml = '<a href="'.$url.'" target="_blank">Login</a>';
         return $finalHtml;
     }
 

@@ -428,5 +428,4 @@ class LoginAsCustomer extends \Magento\Framework\Model\AbstractModel implements 
             'logged_at' => $this->dateTime->gmtTimestamp(),
         ])->save();
     }
-
 }
