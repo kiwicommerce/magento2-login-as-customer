@@ -15,9 +15,9 @@
 
  2. Command Line Installation
       - Backup your web directory and database
-      - Download Login as Customer installation package from [here](https://github.com/kiwicommerce/magento2-login-as-customer/releases/download/v1.0.2/kiwicommerce-login-as-customer-v102.zip)
+      - Download the latest Login as Customer installation package kiwicommerce-login-as-customer-vvvv.zip from [here](https://github.com/kiwicommerce/magento2-login-as-customer/releases)
       - Navigate to your Magento root folder<br />
-          `cd path_to_the_magento_root_directory`<br />      
+          `cd path_to_the_magento_root_directory`<br />
       - Upload contents of the Login as Customer installation package to your Magento root directory
       - Then run the following command<br />
           `php bin/magento module:enable KiwiCommerce_LoginAsCustomer`<br />
@@ -62,6 +62,7 @@ Feel free to get in touch with us at https://kiwicommerce.co.uk/get-in-touch/
 * [Magento 2 Inventory Log](https://kiwicommerce.co.uk/extensions/magento2-inventory-log/)
 * [Magento 2 Enhanced SMTP](https://kiwicommerce.co.uk/extensions/magento2-enhanced-smtp/)
 * [Magento 2 Admin Activity](https://kiwicommerce.co.uk/extensions/magento2-admin-activity/)
+* [Magento 2 Customer Password](https://github.com/kiwicommerce/magento2-customer-password/)
 
 ## Contribution
 Well unfortunately there is no formal way to contribute, we would encourage you to feel free and contribute by:
