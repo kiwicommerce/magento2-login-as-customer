@@ -2,7 +2,7 @@
     "name": "kiwicommerce/module-login-as-customer",
     "description": "This extension allows the admin to log in to customer account from admin panel. By logging in, admin can behave as a registered customer from the storefront.",
     "type": "magento2-module",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": [
         "OSL-3.0"
     ],
