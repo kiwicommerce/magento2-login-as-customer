@@ -75,7 +75,7 @@ class Index extends \Magento\Framework\App\Action\Action
         }
         $login = $this->kiwiLoginAsCustomer->loadNotUsed($secret);
         if ($login->getId()) {
-                 return $login;
+            return $login;
         } else {
             $this->messageManager->addErrorMessage(__('Cannot login to account. Secret key is not valid.'));
             return false;
