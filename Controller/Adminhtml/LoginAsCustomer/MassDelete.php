@@ -65,4 +65,9 @@ class MassDelete extends \Magento\Backend\App\Action
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('*/*/');
     }
+
+    protected function _isAllowed()
+    {
+        return parent::_isAllowed() && $this->_authorization->isAllowed('KiwiCommerce_LoginAsCustomer::IndexOverview');
+    }
 }

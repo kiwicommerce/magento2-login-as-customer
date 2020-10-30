@@ -44,4 +44,9 @@ class Index extends \Magento\Backend\App\Action
              $resultPage->getConfig()->getTitle()->prepend(__("Login As Customer"));
              return $resultPage;
     }
+
+    protected function _isAllowed()
+    {
+        return parent::_isAllowed() && $this->_authorization->isAllowed('KiwiCommerce_LoginAsCustomer::IndexOverview');
+    }
 }

@@ -22,6 +22,9 @@
                     <resource id="KiwiCommerce_LoginAsCustomer::kiwicommerce_login_as_customer" sortOrder="10"
                               title="Login As customer">
 
+                        <resource id="KiwiCommerce_LoginAsCustomer::IndexOverview" sortOrder="10"
+                                  title="Login as customer overview page"/>
+
                         <resource id="KiwiCommerce_LoginAsCustomer::CustomerGrid" sortOrder="20"
                                   title="Customer grid page"/>
                         <resource id="KiwiCommerce_LoginAsCustomer::CustomerView" sortOrder="25"
@@ -36,8 +39,10 @@
                         <resource id="KiwiCommerce_LoginAsCustomer::ShipmentGrid" sortOrder="50" title="Shipment Page"/>
                         <resource id="KiwiCommerce_LoginAsCustomer::ShipmentView" sortOrder="55" title="Shipment Page"/>
 
-                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60" title="Credit Memo Page"/>
-                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoView" sortOrder="65" title="Credit Memo Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60"
+                                  title="Credit Memo Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoView" sortOrder="65"
+                                  title="Credit Memo Page"/>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">
