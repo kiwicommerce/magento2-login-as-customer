@@ -33,8 +33,8 @@
                         <resource id="KiwiCommerce_LoginAsCustomer::InvoiceGrid" sortOrder="40" title="Invoice page"/>
                         <resource id="KiwiCommerce_LoginAsCustomer::InvoiceView" sortOrder="45" title="Invoice page"/>
 
-                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentGrid" sortOrder="50" title="Shipment Page"/>
-                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentView" sortOrder="55" title="Shipment Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::ShipmentGrid" sortOrder="50" title="Shipment Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::ShipmentView" sortOrder="55" title="Shipment Page"/>
 
                         <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60" title="Credit Memo Page"/>
                         <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoView" sortOrder="65" title="Credit Memo Page"/>

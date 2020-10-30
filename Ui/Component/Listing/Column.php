@@ -19,7 +19,6 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\AuthorizationInterface;
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
 
 /**
  * Class CustomerActions
@@ -33,7 +32,7 @@ abstract class Column extends \Magento\Ui\Component\Listing\Columns\Column
     /**
      * @var \Magento\Framework\AuthorizationInterface
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * Actions constructor.
@@ -41,7 +40,6 @@ abstract class Column extends \Magento\Ui\Component\Listing\Columns\Column
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
      * @param AuthorizationInterface $authorization
-     * @param Connector $connector
      * @param array $components
      * @param array $data
      */
@@ -68,15 +66,13 @@ abstract class Column extends \Magento\Ui\Component\Listing\Columns\Column
         parent::prepare();
     }
 
-    public function isFeatureEnabled(): bool
-    {
-        /**
-         * Check the condition config setting for login
-         * as customer is on or off if it's 0 then it's off hide the column
-         */
-        $isAllowed = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
-        return $isAllowed && $this->isGridViewEnabled();
-    }
+    /**
+     * Check the condition config setting for login
+     * as customer is on or off if it's 0 then it's off hide the column
+     *
+     * @return bool
+     */
+    abstract public function isFeatureEnabled(): bool;
 
     /**
      * Prepare Data Source
@@ -126,12 +122,5 @@ abstract class Column extends \Magento\Ui\Component\Listing\Columns\Column
      * @return int
      */
     abstract public function getLoginFrom(): int;
-
-    /**
-     * Tell whether this grid column is enabled in settings
-     *
-     * @return bool
-     */
-    abstract public function isGridViewEnabled(): bool;
 
 }

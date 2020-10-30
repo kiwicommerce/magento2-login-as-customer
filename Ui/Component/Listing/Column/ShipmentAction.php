@@ -31,8 +31,8 @@ class ShipmentAction extends WithOrderIdAction
     /**
      * @inheritDoc
      */
-    public function isGridViewEnabled(): bool
+    public function isFeatureEnabled(): bool
     {
-        return $this->connector->isShowOnShipmentGrid();
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::ShipmentGrid');
     }
 }

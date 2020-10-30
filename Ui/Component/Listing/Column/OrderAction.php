@@ -21,7 +21,6 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\AuthorizationInterface;
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
 
 /**
  * Class CustomerActions
@@ -34,17 +33,11 @@ class OrderAction extends Column
     private $customerRepository;
 
     /**
-     * @var Connector
-     */
-    protected $connector;
-
-    /**
      * OrderAction constructor.
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
      * @param AuthorizationInterface $authorization
-     * @param Connector $connector
      * @param CustomerRepositoryInterface $customerRepository
      * @param array $components
      * @param array $data
@@ -54,13 +47,11 @@ class OrderAction extends Column
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        Connector $connector,
         CustomerRepositoryInterface $customerRepository,
         array $components = [],
         array $data = []
     ) {
         $this->customerRepository = $customerRepository;
-        $this->connector = $connector;
         parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
     }
 
@@ -105,8 +96,8 @@ class OrderAction extends Column
     /**
      * @inheritDoc
      */
-    public function isGridViewEnabled(): bool
+    public function isFeatureEnabled(): bool
     {
-        return $this->connector->isShowOnOrderGrid();
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::OrderGrid');
     }
 }

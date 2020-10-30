@@ -32,8 +32,8 @@ class CreditMemoAction extends WithOrderIdAction
     /**
      * @inheritDoc
      */
-    public function isGridViewEnabled(): bool
+    public function isFeatureEnabled(): bool
     {
-        return $this->connector->isShowOnCreditMemoGrid();
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CreditMemoGrid');
     }
 }

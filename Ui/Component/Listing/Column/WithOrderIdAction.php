@@ -4,7 +4,6 @@
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
 
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\UrlInterface;
@@ -24,13 +23,12 @@ class WithOrderIdAction extends OrderAction
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        Connector $connector,
         CustomerRepositoryInterface $customerRepository,
         OrderRepositoryInterface $orderRepository,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $connector, $customerRepository,
+        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $customerRepository,
             $components, $data);
         $this->orderRepository = $orderRepository;
     }
@@ -41,7 +39,7 @@ class WithOrderIdAction extends OrderAction
         if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
 
             foreach ($dataSource['data']['items'] as &$item) {
-                if (! $item['order_id']) {
+                if (!$item['order_id']) {
                     continue;
                 }
 

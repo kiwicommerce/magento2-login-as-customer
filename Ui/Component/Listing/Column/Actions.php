@@ -15,7 +15,6 @@
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
 
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
 use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\UrlInterface;
@@ -28,21 +27,14 @@ use Magento\Framework\View\Element\UiComponentFactory;
 class Actions extends Column
 {
 
-    /**
-     * @var Connector
-     */
-    private $connector;
-
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        Connector $connector,
         array $components = [],
         array $data = []
     ) {
-        $this->connector = $connector;
         parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
     }
 
@@ -68,8 +60,8 @@ class Actions extends Column
     /**
      * @inheritDoc
      */
-    public function isGridViewEnabled(): bool
+    public function isFeatureEnabled(): bool
     {
-        return $this->connector->isShowOnCustomerGrid();
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
     }
 }

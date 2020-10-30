@@ -30,8 +30,8 @@ class InvoiceAction extends WithOrderIdAction
     /**
      * @inheritDoc
      */
-    public function isGridViewEnabled(): bool
+    public function isFeatureEnabled(): bool
     {
-        return $this->connector->isShowOnInvoiceGrid();
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::InvoiceGrid');
     }
 }
