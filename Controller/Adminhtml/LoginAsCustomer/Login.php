@@ -113,9 +113,9 @@ class Login extends Action
         }
 
         /** @var LoginAsCustomer $login */
-        $login = $this->loginAsCustomerFactory->create([
-            'customer_id' => $customer->getId(),
-        ]);
+        $login = $this->loginAsCustomerFactory->create();
+
+        $login->setCustomerId($customer->getId());
 
         // Delete older entries
         $login->deleteNotUsed();

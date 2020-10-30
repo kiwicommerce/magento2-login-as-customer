@@ -14,71 +14,81 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Controller\Login;
 
+use Exception;
+use KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\Controller\ResultInterface;
+
 /**
  * LoginAsCustomer login action
  */
-class Index extends \Magento\Framework\App\Action\Action
+class Index extends Action
 {
     /**
-     * @var \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer
+     * @var LoginAsCustomer
      */
-    public $kiwiLoginAsCustomer;
+    public $loginAsCustomer;
 
     /**
      * Index constructor.
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer $kiwiLoginAsCustomer
+     * @param Context $context
+     * @param LoginAsCustomer $loginAsCustomer
      */
 
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer $kiwiLoginAsCustomer
+        Context $context,
+        LoginAsCustomer $loginAsCustomer
     ) {
-        $this->kiwiLoginAsCustomer = $kiwiLoginAsCustomer;
+        $this->loginAsCustomer = $loginAsCustomer;
         parent::__construct($context);
     }
     /**
      * Login as customer action
      *
-     * @return \Magento\Framework\Controller\ResultInterface|void
+     * @return ResultInterface|void
      */
     public function execute()
     {
-        $login = $this->checkLogin();
-        if (!$login) {
-            $this->_redirect('customer/account/login');
-            return;
-        }
         try {
-            /* Log in */
+            $login = $this->checkLogin();
             $login->authenticateCustomer();
-        } catch (\Exception $e) {
+
+            $customer = $login->getCustomer();
+        } catch (Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->_redirect('customer/account/login');
             return;
         }
+
         $this->messageManager->addSuccessMessage(
-            __('You are logged in as customer: %1', $login->getCustomer()->getName())
+            __('You are logged in as customer: %1', $customer->getName())
         );
-        $this->_redirect('customer/account');
+
+        $this->_redirect($this->getRedirectUrl());
     }
 
     /**
-     * @return bool or result in array []
+     * @return LoginAsCustomer or result in array []
+     * @throws Exception
      */
-    public function checkLogin()
+    public function checkLogin(): LoginAsCustomer
     {
         $secret = $this->getRequest()->getParam('secret');
         if (!$secret || !is_string($secret)) {
-            $this->messageManager->addErrorMessage(__('Cannot login to account. No secret key provided.'));
-            return false;
+            throw new Exception(__('Cannot login to account. No secret key provided.'));
         }
-        $login = $this->kiwiLoginAsCustomer->loadNotUsed($secret);
-        if ($login->getId()) {
-            return $login;
-        } else {
-            $this->messageManager->addErrorMessage(__('Cannot login to account. Secret key is not valid.'));
-            return false;
+
+        $login = $this->loginAsCustomer->loadNotUsed($secret);
+        if (! $login->getId()) {
+            throw new Exception(__('Cannot login to account. Secret key is invalid.'));
         }
+
+        return $login;
+    }
+
+    public function getRedirectUrl(): string
+    {
+        return 'customer/account';
     }
 }
