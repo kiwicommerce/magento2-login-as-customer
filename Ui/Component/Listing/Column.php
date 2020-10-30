@@ -28,15 +28,19 @@ class Column extends \Magento\Ui\Component\Listing\Columns\Column
     /**
      * @var UrlInterface
      */
-    protected $urlBuilder;
+    private $urlBuilder;
     /**
      * @var Connector
      */
-    protected $connector;
+    private $connector;
     /**
      * @var \Magento\Framework\AuthorizationInterface
      */
-    protected $authorization;
+    private $authorization;
+    /**
+     * @var int
+     */
+    protected $login_from = 1;
 
     /**
      * Actions constructor.
@@ -129,7 +133,7 @@ class Column extends \Magento\Ui\Component\Listing\Columns\Column
 
         $url = $this->urlBuilder->getUrl(
             'loginascustomer/loginascustomer/login',
-            ['customer_id' => $id, 'login_from' => 1]
+            ['customer_id' => $id, 'login_from' => $this->login_from]
         );
 
         return '<a href="'.$url.'" target="_blank">' . __('Login') . '</a>';

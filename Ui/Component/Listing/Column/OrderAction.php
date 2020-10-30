@@ -15,7 +15,7 @@
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
 use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
-use Magento\Customer\Model\ResourceModel\CustomerRepository;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -29,9 +29,11 @@ use KiwiCommerce\LoginAsCustomer\Model\Connector;
 class OrderAction extends Column
 {
     /**
-     * @var CustomerRepository
+     * @var CustomerRepositoryInterface
      */
     private $customerRepository;
+
+    protected $login_from = 4;
 
     /**
      * OrderAction constructor.
@@ -40,7 +42,7 @@ class OrderAction extends Column
      * @param UrlInterface $urlBuilder
      * @param AuthorizationInterface $authorization
      * @param Connector $connector
-     * @param CustomerRepository $customerRepository
+     * @param CustomerRepositoryInterface $customerRepository
      * @param array $components
      * @param array $data
      */
@@ -50,7 +52,7 @@ class OrderAction extends Column
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
         Connector $connector,
-        CustomerRepository $customerRepository,
+        CustomerRepositoryInterface $customerRepository,
         array $components = [],
         array $data = []
     ) {
