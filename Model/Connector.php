@@ -17,6 +17,12 @@ namespace KiwiCommerce\LoginAsCustomer\Model;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
+/**
+ * Class Connector
+ * @package KiwiCommerce\LoginAsCustomer\Model
+ *
+ * @deprecated since 2.0.0 - Fully manageable via acl list
+ */
 class Connector
 {
     /*KiwiCommerce setting */
@@ -62,56 +68,111 @@ class Connector
         return (bool)$this->getConfigValue($path);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isCustomerLoginEnabled(): bool
     {
         return $this->getConfigFlag(static::CONFIG_LAC_ENABLED);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowInInvoiceView(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_INVOICE_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnInvoiceGrid(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_INVOICE_GRID_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnCustomerView(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CUSTOMER_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnCustomerGrid(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CUSTOMER_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnOrderView(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_ORDER_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnOrderGrid(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_ORDER_GRID_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnShipmentView(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_SHIPMENT_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnShipmentGrid(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_SHIPMENT_GIRD_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnCreditMemoView(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CREDIT_MEMO_VIEW_PAGE);
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated since 2.0.0 - Fully manageable via acl list
+     */
     public function isShowOnCreditMemoGrid(): bool
     {
         return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CREDIT_MEMO_GRID_PAGE);

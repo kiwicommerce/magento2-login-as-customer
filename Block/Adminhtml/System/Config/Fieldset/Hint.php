@@ -50,7 +50,6 @@ class Hint extends Template implements RendererInterface
      */
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        $_element = $element;
         return $this->toHtml();
     }
 

@@ -21,16 +21,23 @@
                 <resource id="Magento_Customer::customer" title="Customers" translate="title" sortOrder="40">
                     <resource id="KiwiCommerce_LoginAsCustomer::kiwicommerce_login_as_customer" sortOrder="10"
                               title="Login As customer">
+
                         <resource id="KiwiCommerce_LoginAsCustomer::CustomerGrid" sortOrder="20"
                                   title="Customer grid page"/>
-                        <resource id="KiwiCommerce_LoginAsCustomer::CustomerView" sortOrder="20"
+                        <resource id="KiwiCommerce_LoginAsCustomer::CustomerView" sortOrder="25"
                                   title="Customer Edit page"/>
+
                         <resource id="KiwiCommerce_LoginAsCustomer::OrderGrid" sortOrder="30" title="Order page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::OrderView" sortOrder="35" title="Order page"/>
+
                         <resource id="KiwiCommerce_LoginAsCustomer::InvoiceGrid" sortOrder="40" title="Invoice page"/>
-                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentGrid" sortOrder="50" title="Shipment Page
-"/>
-                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60" title="Credit Memo Page
-"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::InvoiceView" sortOrder="45" title="Invoice page"/>
+
+                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentGrid" sortOrder="50" title="Shipment Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::shipmentView" sortOrder="55" title="Shipment Page"/>
+
+                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoGrid" sortOrder="60" title="Credit Memo Page"/>
+                        <resource id="KiwiCommerce_LoginAsCustomer::CreditMemoView" sortOrder="65" title="Credit Memo Page"/>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">
