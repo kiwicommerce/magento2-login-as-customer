@@ -88,8 +88,8 @@ class Shipment
             return [$context, $buttonList];
         }
 
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
-        $shipmentViewPage = $this->connector->getShipmentViewPage();
+        $loginAsCustomerEnabled = $this->connector->isCustomerLoginEnabled();
+        $shipmentViewPage = $this->connector->isShowOnShipmentView();
 
         /*Check ACL setting option*/
 

@@ -21,5 +21,19 @@ namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
  */
 class CreditMemoAction extends WithOrderIdAction
 {
-    protected $login_from = 10;
+    /**
+     * @inheritDoc
+     */
+    public function getLoginFrom(): int
+    {
+        return 10;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isGridViewEnabled(): bool
+    {
+        return $this->connector->isShowOnCreditMemoGrid();
+    }
 }

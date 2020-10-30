@@ -14,177 +14,106 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+
 class Connector
 {
     /*KiwiCommerce setting */
-    const CONFIG_LAC_ENABLED = 'kiwicommerce/general/login_as_customer_enabled';
+    const CONFIG_LAC_ENABLED                = 'kiwicommerce/general/login_as_customer_enabled';
 
-    const CONFIG_LAC_INVOICE_VIEW_PAGE = 'kiwicommerce/button_visibility/invoice_view_page';
-    const CONFIG_LAC_INVOICE_GRID_PAGE = 'kiwicommerce/button_visibility/invoice_grid_page';
+    const CONFIG_LAC_INVOICE_VIEW_PAGE      = 'kiwicommerce/button_visibility/invoice_view_page';
+    const CONFIG_LAC_INVOICE_GRID_PAGE      = 'kiwicommerce/button_visibility/invoice_grid_page';
 
-    const CONFIG_LAC_CUSTOMER_GRID_PAGE = 'kiwicommerce/button_visibility/customer_grid_page';
-    const CONFIG_LAC_CUSTOMER_VIEW_PAGE = 'kiwicommerce/button_visibility/customer_edit_page';
+    const CONFIG_LAC_CUSTOMER_GRID_PAGE     = 'kiwicommerce/button_visibility/customer_grid_page';
+    const CONFIG_LAC_CUSTOMER_VIEW_PAGE     = 'kiwicommerce/button_visibility/customer_edit_page';
 
-    const CONFIG_LAC_ORDER_VIEW_PAGE = 'kiwicommerce/button_visibility/order_view_page';
-    const CONFIG_LAC_ORDER_GRID_PAGE = 'kiwicommerce/button_visibility/order_grid_page';
+    const CONFIG_LAC_ORDER_VIEW_PAGE        = 'kiwicommerce/button_visibility/order_view_page';
+    const CONFIG_LAC_ORDER_GRID_PAGE        = 'kiwicommerce/button_visibility/order_grid_page';
 
-    const CONFIG_LAC_SHIPMENT_VIEW_PAGE = 'kiwicommerce/button_visibility/shipment_view_page';
-    const CONFIG_LAC_SHIPMENT_GIRD_PAGE = 'kiwicommerce/button_visibility/shipment_grid_page';
+    const CONFIG_LAC_SHIPMENT_VIEW_PAGE     = 'kiwicommerce/button_visibility/shipment_view_page';
+    const CONFIG_LAC_SHIPMENT_GIRD_PAGE     = 'kiwicommerce/button_visibility/shipment_grid_page';
 
-    const CONFIG_LAC_CREDIT_MEMO_VIEW_PAGE = 'kiwicommerce/button_visibility/credit_memo_view_page';
-    const CONFIG_LAC_CREDIT_MEMO_GRID_PAGE = 'kiwicommerce/button_visibility/credit_memo_grid_page';
+    const CONFIG_LAC_CREDIT_MEMO_VIEW_PAGE  = 'kiwicommerce/button_visibility/credit_memo_view_page';
+    const CONFIG_LAC_CREDIT_MEMO_GRID_PAGE  = 'kiwicommerce/button_visibility/credit_memo_grid_page';
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
-    protected $scopeConfig;
+    private $scopeConfig;
 
     /**
      * Connector constructor.
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig
     ) {
-    
         $this->scopeConfig = $scopeConfig;
     }
 
-    /**
-     * @return mixed
-     */
-    /*KiwiCommerce check configuration setting code*/
-
-    /**
-     * @return mixed
-     */
-    public function getCustomerLoginEnable()
+    private function getConfigValue(string $path)
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_ENABLED,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        return $codeStatus;
+        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInvoiceViewPage()
+    private function getConfigFlag(string $path): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_INVOICE_VIEW_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return (bool)$this->getConfigValue($path);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInvoiceGridPage()
+    public function isCustomerLoginEnabled(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_INVOICE_GRID_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->getConfigFlag(static::CONFIG_LAC_ENABLED);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCustomerViewPage()
+    public function isShowInInvoiceView(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_CUSTOMER_VIEW_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_INVOICE_VIEW_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCustomerGridPage()
+    public function isShowOnInvoiceGrid(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_CUSTOMER_GRID_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_INVOICE_GRID_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrderViewPage()
+    public function isShowOnCustomerView(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_ORDER_VIEW_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CUSTOMER_VIEW_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrderGridPage()
+    public function isShowOnCustomerGrid(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_ORDER_GRID_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CUSTOMER_VIEW_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getShipmentViewPage()
+    public function isShowOnOrderView(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_SHIPMENT_VIEW_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_ORDER_VIEW_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getShipmentGridPage()
+    public function isShowOnOrderGrid(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_SHIPMENT_GIRD_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_ORDER_GRID_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCreditMemoViewPage()
+    public function isShowOnShipmentView(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_CREDIT_MEMO_VIEW_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_SHIPMENT_VIEW_PAGE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCreditMemoGridPage()
+    public function isShowOnShipmentGrid(): bool
     {
-        $codeStatus =  $this->scopeConfig->getValue(
-            self::CONFIG_LAC_CREDIT_MEMO_GRID_PAGE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        return $codeStatus;
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_SHIPMENT_GIRD_PAGE);
+    }
+
+    public function isShowOnCreditMemoView(): bool
+    {
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CREDIT_MEMO_VIEW_PAGE);
+    }
+
+    public function isShowOnCreditMemoGrid(): bool
+    {
+        return $this->isCustomerLoginEnabled() && $this->getConfigFlag(static::CONFIG_LAC_CREDIT_MEMO_GRID_PAGE);
     }
 }

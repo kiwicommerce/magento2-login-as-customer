@@ -71,11 +71,11 @@ class Login extends GenericButton implements ButtonProviderInterface
 
         /*check config setting for customer view page*/
 
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
+        $loginAsCustomerEnabled = $this->connector->isCustomerLoginEnabled();
 
         /*check config setting for customer edit page*/
 
-        $customerDetailLoginEnabled = $this->connector->getCustomerViewPage();
+        $customerDetailLoginEnabled = $this->connector->isShowOnCustomerView();
 
         if ($canModify == "1" && $loginAsCustomerEnabled == "1" && $customerDetailLoginEnabled == "1") {
             $urlData = $this->urlBuilder->getUrl(

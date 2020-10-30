@@ -80,8 +80,8 @@ class Invoice
          * */
 
         $customerId = $context->getInvoice()->getOrder()->getCustomerId();
-        $loginAsCustomerEnabled = $this->_connector->getCustomerLoginEnable();
-        $invoiceViewPage = $this->_connector->getInvoiceViewPage();
+        $loginAsCustomerEnabled = $this->_connector->isCustomerLoginEnabled();
+        $invoiceViewPage = $this->_connector->isShowInInvoiceView();
 
         try {
             /* Check customer is exist in customer table or not if not then return on detail page */

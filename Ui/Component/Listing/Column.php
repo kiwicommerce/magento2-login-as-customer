@@ -14,6 +14,7 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing;
 
+use KiwiCommerce\LoginAsCustomer\Helper\Data;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\UrlInterface;
@@ -23,24 +24,16 @@ use KiwiCommerce\LoginAsCustomer\Model\Connector;
 /**
  * Class CustomerActions
  */
-class Column extends \Magento\Ui\Component\Listing\Columns\Column
+abstract class Column extends \Magento\Ui\Component\Listing\Columns\Column
 {
     /**
      * @var UrlInterface
      */
     private $urlBuilder;
     /**
-     * @var Connector
-     */
-    private $connector;
-    /**
      * @var \Magento\Framework\AuthorizationInterface
      */
     private $authorization;
-    /**
-     * @var int
-     */
-    protected $login_from = 1;
 
     /**
      * Actions constructor.
@@ -57,45 +50,32 @@ class Column extends \Magento\Ui\Component\Listing\Columns\Column
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        Connector $connector,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->urlBuilder = $urlBuilder;
         $this->authorization = $authorization;
-        $this->connector = $connector;
     }
 
     public function prepare()
     {
-        parent::prepare();
-
         if (! $this->isFeatureEnabled()) {
-            $this->setData('componentDisabled', true);
+            $config = $this->getData('config');
+            $config['componentDisabled'] = true;
+            $this->setData('config', $config);
         }
+        parent::prepare();
     }
 
     public function isFeatureEnabled(): bool
     {
         /**
-         * This method used to hide the column
-         * if config setting is off for login as customer
-         */
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
-
-        /**
-         * Check config setting for grid listing on or off
-         */
-        $isGridViewEnabled = $this->connector->getCustomerGridPage();
-
-        /**
          * Check the condition config setting for login
          * as customer is on or off if it's 0 then it's off hide the column
          */
-        $hidden = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
-
-        return $loginAsCustomerEnabled && $isGridViewEnabled && $hidden;
+        $isAllowed = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
+        return $isAllowed && $this->isGridViewEnabled();
     }
 
     /**
@@ -107,7 +87,7 @@ class Column extends \Magento\Ui\Component\Listing\Columns\Column
     public function prepareDataSource(array $dataSource)
     {
         /* This section for create login text using foreach loop*/
-        if (isset($dataSource['data']['items'])) {
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
             $columnName = $this->getData('name');
 
             foreach ($dataSource['data']['items'] as &$item) {
@@ -133,10 +113,25 @@ class Column extends \Magento\Ui\Component\Listing\Columns\Column
 
         $url = $this->urlBuilder->getUrl(
             'loginascustomer/loginascustomer/login',
-            ['customer_id' => $id, 'login_from' => $this->login_from]
+            ['customer_id' => $id, 'login_from' => $this->getLoginFrom()]
         );
 
         return '<a href="'.$url.'" target="_blank">' . __('Login') . '</a>';
     }
+
+    /**
+     * Get login form
+     * @see Data for posible values
+     *
+     * @return int
+     */
+    abstract public function getLoginFrom(): int;
+
+    /**
+     * Tell whether this grid column is enabled in settings
+     *
+     * @return bool
+     */
+    abstract public function isGridViewEnabled(): bool;
 
 }

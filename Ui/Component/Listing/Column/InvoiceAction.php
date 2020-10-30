@@ -19,5 +19,19 @@ namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
  */
 class InvoiceAction extends WithOrderIdAction
 {
-    protected $login_from = 6;
+    /**
+     * @inheritDoc
+     */
+    public function getLoginFrom(): int
+    {
+        return 6;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isGridViewEnabled(): bool
+    {
+        return $this->connector->isShowOnInvoiceGrid();
+    }
 }

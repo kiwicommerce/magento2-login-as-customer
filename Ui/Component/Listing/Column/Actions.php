@@ -15,7 +15,12 @@
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
 
+use KiwiCommerce\LoginAsCustomer\Model\Connector;
 use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
 
 /**
  * Class CustomerActions
@@ -23,9 +28,27 @@ use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 class Actions extends Column
 {
 
+    /**
+     * @var Connector
+     */
+    private $connector;
+
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        UrlInterface $urlBuilder,
+        AuthorizationInterface $authorization,
+        Connector $connector,
+        array $components = [],
+        array $data = []
+    ) {
+        $this->connector = $connector;
+        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
+    }
+
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
                 $item['customer_id'] = $item['entity_id'];
             }
@@ -34,5 +57,19 @@ class Actions extends Column
         return parent::prepareDataSource($dataSource);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getLoginFrom(): int
+    {
+        return 1;
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function isGridViewEnabled(): bool
+    {
+        return $this->connector->isShowOnCustomerGrid();
+    }
 }

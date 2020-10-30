@@ -1,4 +1,5 @@
 <?php
+
 /**
  * KiwiCommerce
  *
@@ -19,5 +20,19 @@ namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
  */
 class ShipmentAction extends WithOrderIdAction
 {
-    protected $login_from = 8;
+    /**
+     * @inheritDoc
+     */
+    public function getLoginFrom(): int
+    {
+        return 8;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isGridViewEnabled(): bool
+    {
+        return $this->connector->isShowOnShipmentGrid();
+    }
 }

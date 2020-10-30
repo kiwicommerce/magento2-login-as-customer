@@ -38,7 +38,7 @@ class WithOrderIdAction extends OrderAction
 
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
 
             foreach ($dataSource['data']['items'] as &$item) {
                 if (! $item['order_id']) {

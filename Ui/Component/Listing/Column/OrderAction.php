@@ -33,7 +33,10 @@ class OrderAction extends Column
      */
     private $customerRepository;
 
-    protected $login_from = 4;
+    /**
+     * @var Connector
+     */
+    protected $connector;
 
     /**
      * OrderAction constructor.
@@ -56,8 +59,9 @@ class OrderAction extends Column
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $connector, $components, $data);
         $this->customerRepository = $customerRepository;
+        $this->connector = $connector;
+        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
     }
 
     /**
@@ -68,7 +72,7 @@ class OrderAction extends Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
 
             foreach ($dataSource['data']['items'] as &$item) {
                 if (! $item['customer_id']) {
@@ -90,4 +94,19 @@ class OrderAction extends Column
         return parent::prepareDataSource($dataSource);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getLoginFrom(): int
+    {
+        return 4;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isGridViewEnabled(): bool
+    {
+        return $this->connector->isShowOnOrderGrid();
+    }
 }

@@ -78,7 +78,7 @@ class CreditMemo
         **/
 
         $customerId = $context->getCreditmemo()->getOrder()->getCustomerId();
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
+        $loginAsCustomerEnabled = $this->connector->isCustomerLoginEnabled();
         $invoiceViewPage = $this->connector->getCreditMemoViewPage();
 
         try {
