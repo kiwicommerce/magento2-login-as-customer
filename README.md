@@ -1,3 +1,5 @@
+# We're not maintaining this extension, if you need any support please contact us at hello@kiwicommerce.co.uk
+
 # Magento 2 - Login as Customer by [KiwiCommerce](https://kiwicommerce.co.uk/)
 - Admin can login as customers to trace any process in which the customer is facing the issue.
 - Admin don’t need the password of the customer and the Authentication will not be change.
