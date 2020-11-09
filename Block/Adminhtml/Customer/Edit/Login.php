@@ -29,7 +29,7 @@ class Login extends GenericButton implements ButtonProviderInterface
     /**
      * @var \Magento\Framework\UrlInterface
      */
-    private $urlBuilder;
+    protected $urlBuilder;
 
     /**
      * Login constructor.
