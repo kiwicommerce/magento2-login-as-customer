@@ -4,7 +4,7 @@
 namespace KiwiCommerce\LoginAsCustomer\Block\Widget\Button;
 
 
-use DEG\CustomReports\Api\Data\CustomReportInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Backend\Block\Widget\Button\ButtonList;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\UrlInterface;
@@ -22,7 +22,7 @@ class ToolbarPlugin
      */
     private $authorization;
     /**
-     * @var CustomReportInterface
+     * @var CustomerRepositoryInterface
      */
     private $customerRepository;
 
@@ -30,12 +30,12 @@ class ToolbarPlugin
      * CreditMemo constructor.
      * @param AuthorizationInterface $authorization
      * @param UrlInterface $urlBuilder
-     * @param CustomReportInterface $customerRepository
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         AuthorizationInterface $authorization,
         UrlInterface $urlBuilder,
-        CustomReportInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->authorization = $authorization;
@@ -57,7 +57,7 @@ class ToolbarPlugin
 
         $customerId = $order->getCustomerId();
         if (!$customerId) {
-            return [$context, $buttonList];
+            return;
         }
 
         try {
