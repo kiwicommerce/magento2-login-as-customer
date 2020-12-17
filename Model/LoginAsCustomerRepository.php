@@ -75,7 +75,7 @@ class LoginAsCustomerRepository implements LoginAsCustomerRepositoryInterface
      */
     public function __construct(
         ResourceLoginAsCustomer $resource,
-        loginAsCustomerFactory $loginAsCustomerFactory,
+        LoginAsCustomerFactory $loginAsCustomerFactory,
         LoginAsCustomerInterfaceFactory $dataLoginAsCustomerFactory,
         LoginAsCustomerCollectionFactory $loginAsCustomerCollectionFactory,
         LoginAsCustomerSearchResultsInterfaceFactory $searchResultsFactory,
