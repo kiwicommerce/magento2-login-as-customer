@@ -65,7 +65,7 @@ class LoginAsCustomerRepository implements LoginAsCustomerRepositoryInterface
     /**
      * LoginAsCustomerRepository constructor.
      * @param ResourceLoginAsCustomer $resource
-     * @param loginAsCustomerFactory $loginAsCustomerFactory
+     * @param LoginAsCustomerFactory $loginAsCustomerFactory
      * @param LoginAsCustomerInterfaceFactory $dataLoginAsCustomerFactory
      * @param LoginAsCustomerCollectionFactory $loginAsCustomerCollectionFactory
      * @param LoginAsCustomerSearchResultsInterfaceFactory $searchResultsFactory
