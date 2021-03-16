@@ -14,32 +14,52 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Helper;
 
-use Magento\Customer\Model\Session as CustomerSession;
+use Exception;
+use Magento\Framework\App\Helper\AbstractHelper;
 
 /**
  * Class Data
  * @package KiwiCommerce\LoginAsCustomer\Helper
  */
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
+class Data extends AbstractHelper
 {
+    private $loginOptions = [
+        1 => "Customer Grid",
+        2 => "Customer Edit",
+        3 => "Order View",
+        4 => "Order Grid",
+        5 => "Invoice View",
+        6 => "Invoice Grid",
+        7 => "Shipment View",
+        8 => "Shipment Grid",
+        9 => "Credit Memo View",
+        10 => "Credit Memo Grid",
+    ];
+
+    private $loginOptionResources = [
+        1 => "KiwiCommerce_LoginAsCustomer::CustomerGrid",
+        2 => "KiwiCommerce_LoginAsCustomer::CustomerView",
+        3 => "KiwiCommerce_LoginAsCustomer::OrderView",
+        4 => "KiwiCommerce_LoginAsCustomer::OrderGrid",
+        5 => "KiwiCommerce_LoginAsCustomer::InvoiceView",
+        6 => "KiwiCommerce_LoginAsCustomer::InvoiceGrid",
+        7 => "KiwiCommerce_LoginAsCustomer::ShipmentView",
+        8 => "KiwiCommerce_LoginAsCustomer::ShipmentGrid",
+        9 => "KiwiCommerce_LoginAsCustomer::CreditMemoView",
+        10 => "KiwiCommerce_LoginAsCustomer::CreditMemoGrid",
+    ];
+
     /**
      * @return array
      */
     public function loginOptionsForFilter()
     {
-        $finalArray = [
-            ['value' => 1, 'label' => __('Customer Grid')],
-            ['value' => 2, 'label' => __('Customer Edit')],
-            ['value' => 3, 'label' => __('Order View')],
-            ['value' => 4, 'label' => __('Order Grid')],
-            ['value' => 5, 'label' => __('Invoice View')],
-            ['value' => 6, 'label' => __('Invoice Grid')],
-            ['value' => 7, 'label' => __('Shipment View')],
-            ['value' => 8, 'label' => __('Shipment Grid')],
-            ['value' => 9, 'label' => __('Credit Memo View')],
-            ['value' => 10, 'label' => __('Credit Memo Grid')],
-        ];
-        return $finalArray;
+        return array_map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => $label
+            ];
+        }, $this->loginOptions, array_keys($this->loginOptions));
     }
 
     /**
@@ -47,18 +67,22 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function loginOptionsForListing()
     {
-        $returnArrayList = [
-            "1" => "Customer Grid",
-            "2" => "Customer Edit",
-            "3" => "Order View",
-            "4" => "Order Grid",
-            "5" => "Invoice View",
-            "6" => "Invoice Grid",
-            "7" => "Shipment View",
-            "8" => "Shipment Grid",
-            "9" => "Credit Memo View",
-            "10" => "Credit Memo Grid"
-        ];
-        return $returnArrayList;
+        return $this->loginOptions;
+    }
+
+    /**
+     * Get resource id belonging to the requested id
+     *
+     * @param int $loginOptionId
+     * @return string
+     * @throws Exception
+     */
+    public function getAclResourceId(int $loginOptionId): string
+    {
+        if (! isset($this->loginOptionResources[$loginOptionId])) {
+            throw new Exception('Requested acl resource was not found');
+        }
+
+        return $this->loginOptionResources[$loginOptionId];
     }
 }

@@ -14,103 +14,29 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Block\Widget\Button;
 
-use Magento\Backend\Block\Widget\Button\Toolbar as ToolbarContext;
+use Magento\Backend\Block\Widget\Button\Toolbar;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Backend\Block\Widget\Button\ButtonList;
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
-use Magento\Framework\UrlInterface;
-use Magento\Framework\AuthorizationInterface;
+use Magento\Shipping\Block\Adminhtml\View;
 
-class Shipment
+class Shipment extends ToolbarPlugin
 {
     /**
-     * @var Connector
-     */
-    protected $connector;
-    /**
-     * @var UrlInterface
-     */
-    protected $urlBuilder;
-    /**
-     * @var AuthorizationInterface
-     */
-    protected $authorization;
-    /**
-     * @var \Magento\Customer\Model\ResourceModel\CustomerRepository
-     */
-    protected $customer;
-
-    /**
-     * Shipment constructor.
-     * @param Connector $connector
-     * @param AuthorizationInterface $authorization
-     * @param UrlInterface $urlBuilder
-     * @param \Magento\Customer\Model\ResourceModel\CustomerRepository $customer
-     */
-    public function __construct(
-        Connector $connector,
-        AuthorizationInterface $authorization,
-        UrlInterface $urlBuilder,
-        \Magento\Customer\Model\ResourceModel\CustomerRepository $customer
-    ) {
-        $this->connector = $connector;
-        $this->urlBuilder = $urlBuilder;
-        $this->authorization = $authorization;
-        $this->customer = $customer;
-    }
-
-    /**
-     * @param ToolbarContext $toolbar
+     * @param Toolbar $toolbar
      * @param AbstractBlock $context
      * @param ButtonList $buttonList
      * @return array
      */
     public function beforePushButtons(
-        ToolbarContext $toolbar,
-        \Magento\Framework\View\Element\AbstractBlock $context,
-        \Magento\Backend\Block\Widget\Button\ButtonList $buttonList
+        Toolbar $toolbar,
+        AbstractBlock $context,
+        ButtonList $buttonList
     ) {
-        if (!$context instanceof \Magento\Shipping\Block\Adminhtml\View) {
-            return [$context, $buttonList];
+        if ($context instanceof View) {
+            $this->addLoginAsCustomerViaOrder($context->getShipment()->getOrder(), $buttonList,
+                'KiwiCommerce_LoginAsCustomer::ShipmentView', 7);
         }
 
-        /*
-        * Check customer id and configuration
-         * setting to show Button or not
-        * */
-        $customerId = $context->getShipment()->getCustomerId();
-
-        try {
-            /* Check customer is exist in customer table or not if not then return on detail page */
-
-                $this->customer->getById($customerId)->getId();
-        } catch (\Exception $e) {
-            return [$context, $buttonList];
-        }
-
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
-        $shipmentViewPage = $this->connector->getShipmentViewPage();
-
-        /*Check ACL setting option*/
-
-        $hidden = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::shipmentGrid');
-
-        if (isset($customerId) && $loginAsCustomerEnabled == "1" && $shipmentViewPage == "1" && $hidden == "1") {
-            $urlData = $this->urlBuilder->getUrl(
-                'loginascustomer/loginascustomer/login',
-                ['customer_id' => $customerId,
-                    'login_from' => 7
-                ]
-            );
-            $buttonList->add(
-                'print_invoice',
-                [
-                    'label' => __('Login As Customer'),
-                    'class' => 'loginascustomer',
-                    'onclick' => 'window.open(\'' . $urlData . '\', \'_blank\')'
-                ]
-            );
-        }
-        return [$context, $buttonList, $toolbar];
+        return [$context, $buttonList];
     }
 }

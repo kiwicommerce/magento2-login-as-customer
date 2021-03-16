@@ -14,13 +14,13 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
+use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\AuthorizationInterface;
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class CustomerActions
@@ -28,30 +28,9 @@ use Psr\Log\LoggerInterface;
 class OrderAction extends Column
 {
     /**
-     * @var UrlInterface
+     * @var CustomerRepositoryInterface
      */
-    protected $urlBuilder;
-    /**
-     * @var Connector
-     */
-    protected $connector;
-    /**
-     * @var \Magento\Customer\Model\ResourceModel\CustomerRepository
-     */
-    protected $customer;
-    /**
-     * @var \Magento\Framework\AuthorizationInterface
-     */
-    protected $authorization;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
+    private $customerRepository;
 
     /**
      * OrderAction constructor.
@@ -59,10 +38,7 @@ class OrderAction extends Column
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
      * @param AuthorizationInterface $authorization
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Customer\Model\ResourceModel\CustomerRepository $customer
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param Connector $connector
+     * @param CustomerRepositoryInterface $customerRepository
      * @param array $components
      * @param array $data
      */
@@ -71,20 +47,12 @@ class OrderAction extends Column
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Customer\Model\ResourceModel\CustomerRepository $customer,
-        \Psr\Log\LoggerInterface $logger,
-        Connector $connector,
+        CustomerRepositoryInterface $customerRepository,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $components, $data);
-        $this->urlBuilder = $urlBuilder;
-        $this->authorization = $authorization;
-        $this->scopeConfig = $scopeConfig;
-        $this->connector = $connector;
-        $this->customer = $customer;
-        $this->logger = $logger;
+        $this->customerRepository = $customerRepository;
+        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
     }
 
     /**
@@ -95,71 +63,41 @@ class OrderAction extends Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
-            $hidden = !$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::OrderGrid');
-            foreach ($dataSource['data']['items'] as &$item) {
-                try {
-                    /*Get customer id from customer table customer not exist it will
-                    throw exception handel by catch
-                    */
-                        $this->customer->getById($item['customer_id'])->getId();
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
 
-                    if (!empty($item['customer_id'])
-                            && $item['customer_id'] != null
-                        ) {
-                        $item[$this->getData('name')] = $this->prepareHtml($item['customer_id']);
-                    }
-                } catch (\Exception $e) {
-                    $this->logger->critical($e->getMessage());
+            foreach ($dataSource['data']['items'] as &$item) {
+                if (! $item['customer_id']) {
+                    continue;
+                }
+
+                try {
+                    /**
+                     * Get customer id from customer table customer not exist it will
+                     * throw exception handel by catch
+                     */
+                    $this->customerRepository->getById($item['customer_id']);
+                } catch (NoSuchEntityException $e) {
+                    $item['customer_id'] = null;
                 }
             }
         }
 
-        return $dataSource;
+        return parent::prepareDataSource($dataSource);
     }
 
     /**
-     * @param $id
-     * @return string
+     * @inheritDoc
      */
-    public function prepareHtml($id)
+    public function getLoginFrom(): int
     {
-        $url = $this->urlBuilder->getUrl(
-            'loginascustomer/loginascustomer/login',
-            ['customer_id' => $id, 'login_from' => 4]
-        );
-        $finalHtml = '<a href="'.$url.'" target="_blank">Login</a>';
-        return $finalHtml;
+        return 4;
     }
 
     /**
-     * @param string $key
-     * @return mixed
+     * @inheritDoc
      */
-    protected function _getData($key)
+    public function isFeatureEnabled(): bool
     {
-        /* This method used to hide the column
-           if config setting is off for login as customer
-        */
-
-        $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
-
-        /*Check config setting for grid listing on or off*/
-
-        $isGridViewEnabled =  $this->connector->getOrderGridPage();
-
-        /*  Check the condition config setting for login
-            as customer is on or off if it's 0 then it's off hide the column
-        */
-        $hidden = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::OrderGrid');
-
-        if ($loginAsCustomerEnabled != "1" || $isGridViewEnabled != "1" || $hidden != "1") {
-            if ($key == 'config') {
-                $data = parent::_getData($key);
-                $data['componentDisabled'] = true;
-                return $data;
-            }
-        }
-        return parent::_getData($key);
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::OrderGrid');
     }
 }

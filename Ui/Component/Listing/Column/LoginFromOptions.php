@@ -23,6 +23,11 @@ use KiwiCommerce\LoginAsCustomer\Helper\Data;
 class LoginFromOptions implements OptionSourceInterface
 {
     /**
+     * @var Data
+     */
+    private $helper;
+
+    /**
      * LoginFromOptions constructor.
      * @param Data $helper
      */

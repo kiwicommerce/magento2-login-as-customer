@@ -18,7 +18,7 @@
     <menu>
         <add action="al_login_as/loginascustomer/index"
              id="KiwiCommerce::kiwicommerce_login_as_customer" module="KiwiCommerce_LoginAsCustomer"
-             parent="Magento_Customer::customer" resource="KiwiCommerce_LoginAsCustomer::kiwicommerce_login_as_customer" sortOrder="9999"
+             parent="Magento_Customer::customer" resource="KiwiCommerce_LoginAsCustomer::IndexOverview" sortOrder="9999"
              title="Login As Customer"/>
     </menu>
 </config>

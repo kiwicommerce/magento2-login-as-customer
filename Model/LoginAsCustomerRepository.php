@@ -65,7 +65,7 @@ class LoginAsCustomerRepository implements LoginAsCustomerRepositoryInterface
     /**
      * LoginAsCustomerRepository constructor.
      * @param ResourceLoginAsCustomer $resource
-     * @param loginAsCustomerFactory $loginAsCustomerFactory
+     * @param LoginAsCustomerFactory $loginAsCustomerFactory
      * @param LoginAsCustomerInterfaceFactory $dataLoginAsCustomerFactory
      * @param LoginAsCustomerCollectionFactory $loginAsCustomerCollectionFactory
      * @param LoginAsCustomerSearchResultsInterfaceFactory $searchResultsFactory
@@ -75,7 +75,7 @@ class LoginAsCustomerRepository implements LoginAsCustomerRepositoryInterface
      */
     public function __construct(
         ResourceLoginAsCustomer $resource,
-        loginAsCustomerFactory $loginAsCustomerFactory,
+        LoginAsCustomerFactory $loginAsCustomerFactory,
         LoginAsCustomerInterfaceFactory $dataLoginAsCustomerFactory,
         LoginAsCustomerCollectionFactory $loginAsCustomerCollectionFactory,
         LoginAsCustomerSearchResultsInterfaceFactory $searchResultsFactory,

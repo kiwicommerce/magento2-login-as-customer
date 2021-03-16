@@ -315,7 +315,7 @@ class LoginAsCustomer extends \Magento\Framework\Model\AbstractModel implements 
 
     /**
      * @param $secret
-     * @return \Magento\Framework\DataObject
+     * @return LoginAsCustomer
      */
     public function loadNotUsed($secret)
     {

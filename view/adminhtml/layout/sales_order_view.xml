@@ -19,7 +19,7 @@
         <referenceContainer name="admin.scope.col.wrap"
                             htmlClass="admin__old"/> <!-- ToDo UI: remove this wrapper with old styles removal. The class name "admin__old" is for tests only, we shouldn't use it in any way -->
         <referenceContainer name="content">
-            <referenceBlock name="sales_order_edit" remove="true"/>
+<!--            <referenceBlock name="sales_order_edit" remove="true"/>-->
             <block class="KiwiCommerce\LoginAsCustomer\Block\Adminhtml\Order\View" name="sales_order_edits"/>
         </referenceContainer>
     </body>

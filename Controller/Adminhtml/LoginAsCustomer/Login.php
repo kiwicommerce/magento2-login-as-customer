@@ -14,113 +14,157 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Controller\Adminhtml\LoginAsCustomer;
 
-class Login extends \Magento\Backend\App\Action
+use Exception;
+use KiwiCommerce\LoginAsCustomer\Helper\Data;
+use KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer;
+use KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomerFactory;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\Auth\Session;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use Magento\Framework\Url;
+
+class Login extends Action
 {
     /**
+     * @var RemoteAddress
+     */
+    private $remoteAddress;
+    /**
+     * @var Session
+     */
+    private $session;
+    /**
+     * @var Url
+     */
+    private $urlBuilder;
+    /**
+     * @var Data
+     */
+    private $helper;
+    /**
+     * @var AuthorizationInterface
+     */
+    private $authorization;
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+    /**
+     * @var LoginAsCustomerFactory
+     */
+    private $loginAsCustomerFactory;
+
+    /**
      * Login constructor.
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param Context $context
+     * @param RemoteAddress $remoteAddress
+     * @param Session $session
+     * @param Url $urlBuilder
+     * @param LoginAsCustomerFactory $loginAsCustomerFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param Data $helper
      */
-
-    /**
-     * @var \Magento\Framework\View\Result\PageFactory
-     */
-    public $resultPageFactory;
-
-    /**
-     * @var \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer
-     */
-    public $kiwiLoginCustomer;
-
-    /**
-     * @var \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress
-     */
-    public $kiwiRemoteAddress;
-
-    /**
-     * @var \Magento\Backend\Model\Auth\Session
-     */
-    public $kiwiSession;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    public $kiwiStoreManager;
-
-    /**
-     * @var \Magento\Framework\Url
-     */
-    public $kiwiUrl;
-
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \KiwiCommerce\LoginAsCustomer\Model\LoginAsCustomer $kiwiLoginCustomer,
-        \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $kiwiRemoteAddress,
-        \Magento\Backend\Model\Auth\Session $kiwiSession,
-        \Magento\Store\Model\StoreManagerInterface $kiwiStoreManager,
-        \Magento\Framework\Url $kiwiUrl
+        Context $context,
+        Url $urlBuilder,
+        RemoteAddress $remoteAddress,
+        Session $session,
+        LoginAsCustomerFactory $loginAsCustomerFactory,
+        CustomerRepositoryInterface $customerRepository,
+        Data $helper
     ) {
-        $this->resultPageFactory = $resultPageFactory;
-        $this->kiwiLoginCustomer = $kiwiLoginCustomer;
-        $this->kiwiRemoteAddress = $kiwiRemoteAddress;
-        $this->kiwiSession = $kiwiSession;
-        $this->kiwiStoreManager = $kiwiStoreManager;
-        $this->kiwiUrl = $kiwiUrl;
+        $this->urlBuilder = $urlBuilder;
+        $this->remoteAddress = $remoteAddress;
+        $this->session = $session;
+        $this->loginAsCustomerFactory = $loginAsCustomerFactory;
+        $this->customerRepository = $customerRepository;
+        $this->helper = $helper;
+        $this->authorization = $context->getAuthorization();
+
         parent::__construct($context);
     }
 
     /**
      * Index action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
-        $customerId = (int) $this->getRequest()->getParam('customer_id');
-        $loginFrom = (int) $this->getRequest()->getParam('login_from');
-        $login = $this->kiwiLoginCustomer->setCustomerId($customerId);
+        $customerId = +$this->getRequest()->getParam('customer_id');
+        $loginFrom = +$this->getRequest()->getParam('login_from');
 
-        $login->deleteNotUsed();
-        $customer = $login->getCustomer();
+        try {
+            $this->validateResourceId($loginFrom);
+            $customer = $this->getFrontendCustomer($customerId);
 
-        if (!$customer->getId()) {
-            $this->messageManager->addErrorMessage(__('This is not valid customer/ Customer not found'));
-            $this->_redirect('customer/index/index');
-            return;
+            $adminUser = $this->session->getUser();
+
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage(__($e->getMessage()));
+            return $this->_redirect('dashboard');
         }
-        $user = $this->kiwiSession->getUser();
 
-        /*Pass admin data*/
+        /** @var LoginAsCustomer $login */
+        $login = $this->loginAsCustomerFactory->create();
 
-        $adminId = $user->getId();
-        $adminName = $user->getfirstname();
-        $adminUsername = $user->getusername();
-        $customerEmail = $customer->getEmail();
-        $customerStoreId = $customer->getData('store_id');
+        $login->setCustomerId($customer->getId());
 
-        /*Get ip address of client*/
-        $ip = $this->kiwiRemoteAddress->getRemoteAddress();
-
-        /*Client ip address code end*/
+        // Delete older entries
+        $login->deleteNotUsed();
 
         $login->generate(
-            $adminId,
-            $adminName,
-            $adminUsername,
+            $adminUser->getId(),
+            $adminUser->getName(),
+            $adminUser->getUserName(),
             $loginFrom,
-            $customerEmail,
-            $ip
+            $customer->getEmail(),
+            $this->remoteAddress->getRemoteAddress()
         );
-        $store = $this->kiwiStoreManager->getStore($customerStoreId);
-        $url = $this->kiwiUrl->setScope($store);
-        $redirectUrl = $url->getUrl(
+
+        $this->getResponse()
+                ->setRedirect(
+                    $this->getFrontendLoginUrl($customer, $login)
+                );
+    }
+
+    public function validateResourceId(int $loginFrom): void
+    {
+        $resourceId = $this->helper->getAclResourceId($loginFrom);
+
+        // Check if user has access to given resource
+        if (! $this->authorization->isAllowed($resourceId)) {
+            throw new Exception('Requested resource is not allowed');
+        }
+    }
+
+    /**
+     * @param int $customerId
+     * @return CustomerInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getFrontendCustomer(int $customerId): CustomerInterface
+    {
+        return $this->customerRepository->getById($customerId);
+    }
+
+    public function getFrontendLoginUrl(CustomerInterface $customer, LoginAsCustomer $loginAsCustomer)
+    {
+        return $this->urlBuilder->getUrl(
             'loginascustomer/login/index',
-            ['secret' => $login->getSecret(),
-                '_nosid' => true]
-        );
-        $this->getResponse()->setRedirect(
-            $redirectUrl
+            [
+                'secret' => $loginAsCustomer->getSecret(),
+                '_nosid' => true,
+                '_scope' => $customer->getStoreId()
+            ]
         );
     }
 }

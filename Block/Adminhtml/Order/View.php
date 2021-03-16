@@ -15,100 +15,51 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Block\Adminhtml\Order;
 
+use KiwiCommerce\LoginAsCustomer\Block\Widget\Button\ToolbarPlugin;
+use Magento\Backend\Block\Widget\Context;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Registry;
+use Magento\Sales\Helper\Reorder;
+use Magento\Sales\Model\Config;
 
 class View extends \Magento\Sales\Block\Adminhtml\Order\View
 {
     /**
-     * @var \Magento\Customer\Model\ResourceModel\CustomerRepository
+     * @var ToolbarPlugin
      */
-    protected $customer;
+    private $toolbarPlugin;
+
     /**
      * View constructor.
-     * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Sales\Model\Config $salesConfig
-     * @param \Magento\Sales\Helper\Reorder $reorderHelper
-     * @param \Magento\Customer\Model\ResourceModel\CustomerRepository $customer
+     * @param Context $context
+     * @param Registry $registry
+     * @param Config $salesConfig
+     * @param Reorder $reorderHelper
+     * @param ToolbarPlugin $toolbarPlugin
      * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Widget\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Sales\Model\Config $salesConfig,
-        \Magento\Sales\Helper\Reorder $reorderHelper,
-        \Magento\Customer\Model\ResourceModel\CustomerRepository $customer,
+        Context $context,
+        Registry $registry,
+        Config $salesConfig,
+        Reorder $reorderHelper,
+        ToolbarPlugin $toolbarPlugin,
         array $data = []
     ) {
-        $this->customer = $customer;
+        $this->toolbarPlugin = $toolbarPlugin;
         parent::__construct($context, $registry, $salesConfig, $reorderHelper, $data);
     }
+
     protected function _construct()
     {
-        $this->_objectId = 'order_id';
-        $this->_controller = 'adminhtml_order';
-        $this->_mode = 'view';
         parent::_construct();
-        $this->removeButton('delete');
-        $this->removeButton('reset');
-        $this->removeButton('save');
-        $this->setId('sales_order_view');
-        $order = $this->getOrder();
 
         /*Check order is exist or not */
-
-        if (!$order) {
+        $order = $this->getOrder();
+        if (! $order) {
             return;
         }
-
-        /*Check ACL config*/
-
-        $hidden = $this->_authorization->isAllowed('KiwiCommerce_LoginAsCustomer::OrderGrid');
-
-        $checkCustomerId = $this->getOrder()->getCustomerId();
-
-        try {
-            /* Check customer is exist in customer table or not if not then return on detail page */
-
-                   $this->customer->getById($checkCustomerId)->getId();
-        } catch (\Exception $e) {
-                    return;
-        }
-
-        /*Check config setting is on or not for show the login as customer tab*/
-
-        $loginAsCustomerEnabled = $this->_scopeConfig->getValue(
-            'kiwicommerce/general/login_as_customer_enabled',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        /*Check condition for order view page*/
-
-        $orderViewPage = $this->_scopeConfig->getValue(
-            'kiwicommerce/button_visibility/order_view_page',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        /*Code for show the tab*/
-
-        if ($loginAsCustomerEnabled == "1"
-        && $orderViewPage == "1"
-        && isset($checkCustomerId)
-        && $hidden == "1"
-
-        ) {
-            $urlData = $this->_urlBuilder->getUrl(
-                'loginascustomer/loginascustomer/login',
-                ['customer_id' => $checkCustomerId, 'login_from' => 3]
-            );
-            $this->buttonList->add(
-                'loginascustomer',
-                [
-                    'label' => __('Login As Customer'),
-                    'class' => 'loginascustomer',
-                    'onclick' => 'window.open(\'' . $urlData . '\', \'_blank\')'
-                ]
-            );
-        }
+        $this->toolbarPlugin->addLoginAsCustomerViaOrder($order, $this->buttonList, 'KiwiCommerce_LoginAsCustomer::OrderView', 3);
     }
 }

@@ -14,115 +14,54 @@
 
 namespace KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
 
+
+use KiwiCommerce\LoginAsCustomer\Ui\Component\Listing\Column;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\Ui\Component\Listing\Columns\Column;
-use Magento\Framework\UrlInterface;
-use Magento\Framework\AuthorizationInterface;
-use KiwiCommerce\LoginAsCustomer\Model\Connector;
 
 /**
  * Class CustomerActions
  */
 class Actions extends Column
 {
-    /**
-     * @var UrlInterface
-     */
-    protected $urlBuilder;
-    /**
-     * @var Connector
-     */
-    protected $connector;
-    /**
-     * @var \Magento\Framework\AuthorizationInterface
-     */
-    protected $authorization;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-    /**
-     * Actions constructor.
-     * @param ContextInterface $context
-     * @param UiComponentFactory $uiComponentFactory
-     * @param UrlInterface $urlBuilder
-     * @param AuthorizationInterface $authorization
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param Connector $connector
-     * @param array $components
-     * @param array $data
-     */
+
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         AuthorizationInterface $authorization,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        Connector $connector,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $components, $data);
-        $this->urlBuilder = $urlBuilder;
-        $this->authorization = $authorization;
-        $this->scopeConfig = $scopeConfig ;
-        $this->connector = $connector;
+        parent::__construct($context, $uiComponentFactory, $urlBuilder, $authorization, $components, $data);
     }
-    /**
-     * Prepare Data Source
-     *
-     * @param array $dataSource
-     * @return array
-     */
+
     public function prepareDataSource(array $dataSource)
     {
-        /* This section for create login text using foreach loop*/
-        if (isset($dataSource['data']['items'])) {
-            $hidden = !$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
+        if ($this->isFeatureEnabled() && isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $item[$this->getData('name')] = $this->prepareHtml($item['entity_id']);
+                $item['customer_id'] = $item['entity_id'];
             }
         }
-        return $dataSource;
+
+        return parent::prepareDataSource($dataSource);
     }
+
     /**
-     * @param $id
-     * @return string
+     * @inheritDoc
      */
-    public function prepareHtml($id)
+    public function getLoginFrom(): int
     {
-        $url=$this->urlBuilder->getUrl(
-            'loginascustomer/loginascustomer/login',
-            ['customer_id' => $id, 'login_from' => 1]
-        );
-        $finalHtml = '<a href="'.$url.'" target="_blank">Login</a>';
-        return $finalHtml;
+        return 1;
     }
 
-    protected function _getData($key)
+    /**
+     * @inheritDoc
+     */
+    public function isFeatureEnabled(): bool
     {
-        /* This method used to hide the column
-           if config setting is off for login as customer
-        */
-            $loginAsCustomerEnabled = $this->connector->getCustomerLoginEnable();
-
-        /*Check config setting for grid listing on or off*/
-
-            $isGridViewEnabled = $this->connector->getCustomerGridPage();
-
-        /*  Check the condition config setting for login
-            as customer is on or off if it's 0 then it's off hide the column
-        */
-
-            $hidden = $this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
-        if ($loginAsCustomerEnabled != "1" || $isGridViewEnabled != "1" || $hidden != "1") {
-            if ($key == 'config') {
-                $data = parent::_getData($key);
-                $data['componentDisabled'] = true;
-                return $data;
-            }
-        }
-        return parent::_getData($key);
+        return (bool)$this->authorization->isAllowed('KiwiCommerce_LoginAsCustomer::CustomerGrid');
     }
 }
